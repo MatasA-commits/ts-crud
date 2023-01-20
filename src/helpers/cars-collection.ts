@@ -14,32 +14,26 @@ class CarsCollection {
 
   private static MODEL_ERROR = 'Model not found';
 
-  private cars: Car[];
+  private props: CarsCollectionProps;
 
-  private brands: Brand[];
-
-  private models: Model[];
-
-  constructor({
-    cars,
-    brands,
-    models,
-  }: CarsCollectionProps) {
-    this.cars = JSON.parse(JSON.stringify(cars));
-    this.brands = JSON.parse(JSON.stringify(brands));
-    this.models = JSON.parse(JSON.stringify(models));
+  constructor(props: CarsCollectionProps) {
+    this.props = JSON.parse(JSON.stringify(props));
   }
 
   public get allCars(): CarJoined[] {
-    return this.cars.map((car) => this.joinCar(car));
+    return this.props.cars.map((car) => this.joinCar(car));
+  }
+
+  public get brands(): Brand[] {
+    return JSON.parse(JSON.stringify(this.props.brands));
   }
 
    private joinCar(car: Car): CarJoined {
-    const carModel = this.models.find((model) => car.modelId === model.id);
+    const carModel = this.props.models.find((model) => car.modelId === model.id);
 
     if (carModel === undefined) throw new Error(CarsCollection.MODEL_ERROR);
 
-    const carBrand = this.brands.find((brand) => brand.id === carModel.brandId);
+    const carBrand = this.props.brands.find((brand) => brand.id === carModel.brandId);
 
     if (carBrand === undefined) throw new Error(CarsCollection.BRAND_ERROR);
 
@@ -47,8 +41,8 @@ class CarsCollection {
     const carBrandString = carBrand.title;
     return {
       ...car,
-      brand: carBrandString,
-      model: carModelString,
+      brand: carBrand && carBrandString,
+      model: carModel && carModelString,
     };
   }
 }
