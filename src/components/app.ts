@@ -35,7 +35,13 @@ class App {
     const container = document.createElement('div');
     container.className = 'container my-5 d-flex flex-column gap-1';
 
-    const selectField = new SelectField({ options: this.carsCollection.brands.map(brandToOption) });
+    const selectField = new SelectField({
+      options: this.carsCollection.brands.map(brandToOption),
+      onChange: (_, brandId) => {
+       const newCars = this.carsCollection.getByBrandId(brandId);
+       console.log(newCars);
+      },
+     });
 
     const table = new Table({
       title: 'Visi automobiliai',
