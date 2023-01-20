@@ -1,4 +1,4 @@
-type TableRowsData = {
+export type TableRowsData = {
   id: string,
   [key: string]: string,
 };
@@ -25,38 +25,51 @@ class Table<T extends TableRowsData> {
     this.thead = document.createElement('thead');
 
     this.initialize();
+    this.renderView();
 }
 
-initializeHead = () => {
-  const columnsNames = Object.values(this.props.columns);
-  const columnsHtmlStr = columnsNames.map((name) => `<th>${name}</th>`)
-  .join('');
-  this.thead.innerHTML = `
-  <tr class='text-center h3'>
-    <th colspan="${columnsNames.length}">${this.props.title}</th>
-  </tr>
-  <tr>${columnsHtmlStr}</tr>`;
-};
-
-initializeBody = () => {
-  const keys = Object.keys(this.props.columns);
-
-  this.props.rowsData.forEach((rowData) => {
-  const columnsHtmlStr = keys.map((key) => `<td>${rowData[key]}</td>`)
-  .join('');
-    const rowHtmlStr = `<tr>${columnsHtmlStr}</tr>`;
-    this.tbody.innerHTML += rowHtmlStr;
-  });
-};
-
-initialize = () => {
-  this.initializeHead();
-  this.initializeBody();
+private initialize = () => {
   this.htmlElement.className = 'table table-dark table-borderless';
   this.htmlElement.append(
     this.thead,
     this.tbody,
   );
+};
+
+  private renderHeadView = () => {
+    const columnsNames = Object.values(this.props.columns);
+    const columnsHtmlStr = columnsNames.map((name) => `<th>${name}</th>`)
+    .join('');
+
+    this.thead.innerHTML = `
+    <tr class='text-center h3'>
+      <th colspan="${columnsNames.length}">${this.props.title}</th>
+    </tr>
+    <tr>${columnsHtmlStr}</tr>`;
+  };
+
+  private renderBodyView = () => {
+    this.tbody.innerHTML = '';
+      const keys = Object.keys(this.props.columns);
+    this.props.rowsData.forEach((rowData) => {
+      const columnsHtmlStr = keys.map((key) => `<td>${rowData[key]}</td>`)
+      .join('');
+        const rowHtmlStr = `<tr>${columnsHtmlStr}</tr>`;
+        this.tbody.innerHTML += rowHtmlStr;
+      });
+  };
+
+private renderView = () => {
+  this.renderHeadView();
+  this.renderBodyView();
+};
+
+updateProps = (newProps: Partial<TableProps<T>>) => {
+this.props = {
+  ...this.props,
+  ...newProps,
+};
+this.renderView();
 };
 }
 
