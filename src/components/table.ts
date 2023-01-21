@@ -38,12 +38,12 @@ private initialize = () => {
 
   private renderHeadView = () => {
     const columnsNames = Object.values(this.props.columns);
-    const columnsHtmlStr = columnsNames.map((name) => `<th>${name}</th>`)
-    .join('');
+    const columnsHtmlStr = `${columnsNames.map((name) => `<th>${name}</th>`)
+    .join('')}<th></th>`;
 
     this.thead.innerHTML = `
     <tr class='text-center h3'>
-      <th colspan="${columnsNames.length}">${this.props.title}</th>
+      <th colspan="${columnsNames.length + 1}">${this.props.title}</th>
     </tr>
     <tr>${columnsHtmlStr}</tr>`;
   };
@@ -52,8 +52,11 @@ private initialize = () => {
     this.tbody.innerHTML = '';
       const keys = Object.keys(this.props.columns);
     this.props.rowsData.forEach((rowData) => {
-      const columnsHtmlStr = keys.map((key) => `<td>${rowData[key]}</td>`)
-      .join('');
+      const columnsHtmlStr = `${keys.map((key) => `<td>${rowData[key]}</td>`)
+      .join('')}
+      <td>
+        <button class="btn btn-danger btn-sm">DEL</button>
+      </td>`;
         const rowHtmlStr = `<tr>${columnsHtmlStr}</tr>`;
         this.tbody.innerHTML += rowHtmlStr;
       });
