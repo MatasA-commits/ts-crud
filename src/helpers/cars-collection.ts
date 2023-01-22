@@ -45,7 +45,7 @@ class CarsCollection {
   }
 
   public deleteCarById = (carId: string): void => {
-    this.props.brands = this.props.brands
+    this.props.cars = this.props.cars
     .filter((car) => car.id !== carId);
   };
 
